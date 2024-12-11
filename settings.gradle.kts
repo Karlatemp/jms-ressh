@@ -1,0 +1,2 @@
+rootProject.name = "jms-ressh"
+
