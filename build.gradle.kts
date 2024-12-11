@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.1.0"
+    id("com.gradleup.shadow") version "8.3.5"
 }
 
 group = "moe.karla"
@@ -25,4 +26,12 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.build.configure { dependsOn("shadowJar") }
+
+tasks.shadowJar {
+    manifest.attributes["Main-Class"] = "moe.karla.jmsressh.MainKt"
+
+    mergeServiceFiles()
 }
