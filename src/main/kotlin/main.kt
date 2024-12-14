@@ -8,6 +8,7 @@ import moe.karla.jmsressh.auth.JmsResshUserAuthingProvider
 import moe.karla.jmsressh.command.ForwardedShellCommand
 import moe.karla.jmsressh.command.ForwardingSubsystemFactory
 import moe.karla.jmsressh.session.AdvancedChannelSession
+import moe.karla.jmsressh.socks.startSockProxyServer
 import org.apache.sshd.client.SshClient
 import org.apache.sshd.client.keyverifier.AcceptAllServerKeyVerifier
 import org.apache.sshd.client.session.ClientSession
@@ -43,7 +44,8 @@ fun main() {
         .build()
 
     val dataFolder = Paths.get("data").createDirectories()
-    server.keyPairProvider = SimpleGeneratorHostKeyProvider(dataFolder.resolve("server_key.txt"))
+    val keyProvider = SimpleGeneratorHostKeyProvider(dataFolder.resolve("server_key.txt"))
+    server.keyPairProvider = keyProvider
     server.publickeyAuthenticator = JmsResshUserAuthingProvider.DelegatingPublicKeyAuthorization
     server.passwordAuthenticator = JmsResshUserAuthingProvider.DelegatingPasswordAuthenticator
 
@@ -62,4 +64,5 @@ fun main() {
     server.port = 7411
     server.start()
 
+    startSockProxyServer(dataFolder, keyProvider)
 }
