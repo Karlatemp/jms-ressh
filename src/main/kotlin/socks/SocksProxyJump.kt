@@ -8,6 +8,7 @@ import org.apache.sshd.common.io.IoServiceFactory
 import org.apache.sshd.common.keyprovider.KeyPairProvider
 import org.apache.sshd.common.session.Session
 import org.apache.sshd.common.util.net.SshdSocketAddress
+import org.apache.sshd.core.CoreModuleProperties
 import org.apache.sshd.netty.NettyIoServiceFactory
 import org.apache.sshd.netty.NettyIoServiceFactoryFactory
 import org.apache.sshd.server.SshServer
@@ -22,6 +23,7 @@ import org.apache.sshd.server.forward.ForwardingFilter
 import org.apache.sshd.server.forward.TcpForwardingFilter
 import java.net.InetSocketAddress
 import java.nio.file.Path
+import java.time.Duration
 import java.util.*
 import kotlin.io.path.bufferedReader
 import kotlin.io.path.createDirectories
@@ -39,6 +41,7 @@ fun startSockProxyServer(dataFolder: Path, keyPairProvider: KeyPairProvider) {
     val server = SshServer.setUpDefaultServer()
     server.port = settings.getProperty("port")?.toIntOrNull() ?: 7341
     server.keyPairProvider = keyPairProvider
+    CoreModuleProperties.IDLE_TIMEOUT.set(server, Duration.ZERO)
 
     val passwd = settings.getProperty("auth.password")
     server.passwordAuthenticator =

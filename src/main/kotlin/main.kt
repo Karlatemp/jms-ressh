@@ -42,6 +42,7 @@ fun main() {
             )
         )
         .build()
+    CoreModuleProperties.IDLE_TIMEOUT.set(server, Duration.ZERO)
 
     val dataFolder = Paths.get("data").createDirectories()
     val keyProvider = SimpleGeneratorHostKeyProvider(dataFolder.resolve("server_key.txt"))
